@@ -8,8 +8,11 @@ const Button = (props) => (
 
 const Display = (props) => <div><h1>{props.text}</h1></div>
 
+const StatisticLine = (props) => <>{props.text} {props.value}<br /></>
+
 const Statistics = (props) => {
   const sum = props.good + props.neutral + props.bad
+  const pos = (props.good/sum * 100) + '%'
   
   // if no feedback given then give no feedback message instead of statistics
   if (sum === 0) {
@@ -19,12 +22,12 @@ const Statistics = (props) => {
   return(
     <div>
       <p>
-        good {props.good} <br />
-        neutral {props.neutral} <br />
-        bad {props.bad} <br />
-        all {sum} <br />
-        average {(props.good - props.bad) / sum} <br />
-        positive {props.good/sum * 100}% <br />
+        <StatisticLine text='good' value={props.good} />
+        <StatisticLine text='neutral' value={props.neutral} />
+        <StatisticLine text='bad' value={props.bad} />
+        <StatisticLine text='all' value={sum} />
+        <StatisticLine text='average' value={(props.good - props.bad) / sum} />
+        <StatisticLine text='positive' value={pos} />
       </p>
     </div>
   )
