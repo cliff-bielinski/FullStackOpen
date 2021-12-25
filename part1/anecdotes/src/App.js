@@ -6,7 +6,19 @@ const Button = (props) => (
   </button>
 )
 
+const Display = (props) => (
+  <div>
+    {props.anecdote} <br />
+    has {props.count} votes
+  </div>
+)
+
+const Header = (props) => <><h1>{props.title}</h1></>
+
 const App = () => {
+  const title = 'Anecdote of the day'
+  const popularTitle = 'Anecdote with most votes'
+
   const anecdotes = [
     'If it hurts, do it more often',
     'Adding manpower to a late software project makes it later!',
@@ -18,16 +30,30 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(new Array(anecdotes.length).fill(0))
+
+  const max = Math.max(...points)
+  const maxIndex = points.indexOf(max)
 
   const handleAnecdoteClick = () => {
     const next = Math.floor(Math.random() * anecdotes.length)
     setSelected(next)
   }
 
+  const handleVoteClick = () => {
+    const arrayCopy = [...points]
+    arrayCopy[selected] += 1
+    setPoints(arrayCopy)
+  }
+
   return (
     <div>
-      {anecdotes[selected]} <br />
+      <Header title={title} />
+      <Display anecdote={anecdotes[selected]} count={points[selected]} />
+      <Button handleClick={handleVoteClick} text='vote' />
       <Button handleClick={handleAnecdoteClick} text='next anecdote' />
+      <Header title={popularTitle} />
+      <Display anecdote={anecdotes[maxIndex]} count={points[maxIndex]} />
     </div>
   )
 }
