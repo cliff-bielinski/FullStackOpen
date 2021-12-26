@@ -4,39 +4,33 @@ const Display = ({ title }) => <h2>{title}</h2>
 
 const Person = ({ person }) => <div>{person.name}: {person.number}</div>
 
-const Add = ({ persons, setPersons }) => {
-  const [newName, setNewName] = useState('')
-  const [newNumber, setNewNumber] = useState('')
-
-  const handleNameChange = (event) => setNewName(event.target.value)
-  const handleNumberChange = (event) => setNewNumber(event.target.value)
-
+const Add = (props) => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (persons.some(person => person.name === newName)){
-      window.alert(`${newName} is already added to the phonebook`)
+    if (props.persons.some(person => person.name === props.newName)){
+      window.alert(`${props.newName} is already added to the phonebook`)
     }
 
     else {
       const personObject = {
-        name: newName,
-        number: newNumber,
-        id: persons.length + 1
+        name: props.newName,
+        number: props.newNumber,
+        id: props.persons.length + 1
       }
-      setPersons(persons.concat(personObject))
+      props.setPersons(props.persons.concat(personObject))
     }
 
-    setNewName('')
-    setNewNumber('')
+    props.setNewName('')
+    props.setNewNumber('')
   }
 
   return (
     <div>
       <Display title="Add a person" />
       <form onSubmit={addPerson}>
-        <div>name: <input value={newName} onChange={handleNameChange} /></div>
-        <div>number: <input value={newNumber} onChange={handleNumberChange} /></div>
+        <div>name: <input value={props.newName} onChange={props.handleNameChange} /></div>
+        <div>number: <input value={props.newNumber} onChange={props.handleNumberChange} /></div>
         <div>
           <button type="submit">add</button>
         </div>
@@ -45,9 +39,7 @@ const Add = ({ persons, setPersons }) => {
   )
 }
 
-const Filter = ({ filter, setFilter }) => {
-  const handleFilterChange = (event) => setFilter(event.target.value)
-
+const Filter = ({ filter, setFilter, handleFilterChange }) => {
   return(
     <form>
       <div>filter shown with <input value={filter} onChange={handleFilterChange} /></div>
@@ -79,12 +71,31 @@ const App = () => {
     { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
   ])
   const [filter, setFilter] = useState('')
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+
+  const handleNameChange = (event) => setNewName(event.target.value)
+  const handleNumberChange = (event) => setNewNumber(event.target.value)
+  const handleFilterChange = (event) => setFilter(event.target.value)
   
   return (
     <div>
       <Display title='Phonebook' />
-      <Filter filter={filter} setFilter={setFilter} />
-      <Add persons={persons} setPersons={setPersons} />
+      <Filter 
+        filter={filter} 
+        setFilter={setFilter} 
+        handleFilterChange={handleFilterChange}
+      />
+      <Add 
+        persons={persons} 
+        setPersons={setPersons} 
+        newName={newName}
+        setNewName={setNewName}
+        newNumber={newNumber}
+        setNewNumber={setNewNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+      />
       <Numbers persons={persons} filter={filter} />
     </div>
   )
