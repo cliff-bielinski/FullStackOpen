@@ -48,7 +48,6 @@ const Results = ({ countries , filter, setFilter }) => {
 }
 
 const Display = ({ country }) => {
-
   return (
     <div>
       <h1>{country.name.common}</h1>
@@ -63,6 +62,31 @@ const Display = ({ country }) => {
         )}
       </ul>
       <img src={country.flags.png} />
+      <Weather country={country} />
+    </div>
+  )
+}
+
+const Weather = ({ country }) => {
+  const [weather, setWeather] = useState('')
+  const api_key = process.env.REACT_APP_API_KEY
+
+  useEffect(() => {
+    axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?q=${country.capital}&appid=${api_key}&units=metric`)
+      .then(response => {
+        setWeather(response.data)
+      })
+  }, [])
+
+  if (!weather) return null
+  
+  return(
+    <div>
+      <h2>Weather in {country.capital}</h2>
+      <div><b>Temperature: </b> {weather.main.temp} Celsius</div>
+      <div><img src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}/></div>
+      <div><b>Wind: </b>{weather.wind.speed}kmh at {weather.wind.deg} degrees</div>
     </div>
   )
 }
