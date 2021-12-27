@@ -16,13 +16,15 @@ const Search = ({ filter, setFilter, handleSearch }) => {
   )
 }
 
-const Results = ({ countries , filter }) => {
-  
+const Results = ({ countries , filter, setFilter }) => {
   const results = countries.filter(country => 
     country.name.common
     .toLowerCase()
     .includes(filter.toLowerCase())
   )
+
+  const handleShow = (event) => setFilter(event.target.id)
+
   if (!filter || !results.length) return <div>No results</div>
   
   else if (results.length == 1) return <Display country={results[0]}/>
@@ -31,7 +33,12 @@ const Results = ({ countries , filter }) => {
     return (
       <>
         {results.map(result => 
-          <div key={result.name.common}>{result.name.common}</div>
+          <div key={result.name.common}>
+            {result.name.common}
+            <button id={result.name.common} onClick={handleShow}>
+              show
+            </button>
+          </div>
         )}
       </>
     )
@@ -82,7 +89,11 @@ function App() {
         setFilter={setFilter} 
         handleSearch={handleSearch} 
       />
-      <Results countries={countries} filter={filter} />
+      <Results 
+        countries={countries} 
+        filter={filter} 
+        setFilter={setFilter}
+      />
     </div>
   );
 }
