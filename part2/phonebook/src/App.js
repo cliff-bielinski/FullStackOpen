@@ -3,7 +3,7 @@ import personService from './services/persons'
 
 const Display = ({ title }) => <h2>{title}</h2>
 
-const Person = ({ person }) => <div>{person.name}: {person.number}</div>
+const Person = ({ person }) => <>{person.name}: {person.number}</>
 
 const Add = (props) => {
   const addPerson = (event) => {
@@ -51,7 +51,7 @@ const Filter = ({ filter, setFilter, handleFilterChange }) => {
   )
 }
 
-const Numbers = ({ persons, filter }) => {
+const Numbers = ({ persons, filter, handleDelete }) => {
   const phonebook = filter
     ? persons.filter(person => 
       person.name
@@ -62,7 +62,14 @@ const Numbers = ({ persons, filter }) => {
   return(  
     <div>
       <Display title="Numbers" />
-      {phonebook.map(person => <Person key={person.id} person={person} />)}
+      {phonebook.map(person => {
+        return (
+          <div key={person.id}>
+            <Person key={person.id} person={person} />
+            <button id={person.id} onClick={handleDelete}>delete</button>
+          </div>
+        )}
+      )}
     </div>
   )
 }
@@ -76,6 +83,7 @@ const App = () => {
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleFilterChange = (event) => setFilter(event.target.value)
+  const handleDelete = (event) => console.log(event.target)
   
   useEffect(() => {
     personService
@@ -103,7 +111,11 @@ const App = () => {
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
       />
-      <Numbers persons={persons} filter={filter} />
+      <Numbers 
+        persons={persons} 
+        filter={filter} 
+        handleDelete={handleDelete}  
+      />
     </div>
   )
 }
