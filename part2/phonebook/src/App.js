@@ -58,7 +58,7 @@ const Numbers = ({ persons, filter, handleDelete }) => {
         .toLowerCase()
         .startsWith(filter.toLowerCase()))
     : persons
-
+  
   return(  
     <div>
       <Display title="Numbers" />
@@ -66,7 +66,7 @@ const Numbers = ({ persons, filter, handleDelete }) => {
         return (
           <div key={person.id}>
             <Person key={person.id} person={person} />
-            <button id={person.id} onClick={handleDelete}>delete</button>
+            <button id={person.id} onClick={() => handleDelete(person)}>delete</button>
           </div>
         )}
       )}
@@ -83,13 +83,14 @@ const App = () => {
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleFilterChange = (event) => setFilter(event.target.value)
-  const handleDelete = (event) => {
-    const id = parseInt(event.target.id)
-    personService
-      .remove(id)
+  const handleDelete = (target) => {
+    if (window.confirm(`Delete contact: ${target.name}?`)){
+      personService
+      .remove(target.id)
       .then(response => {
-        setPersons(persons.filter(person => person.id !== id))
+        setPersons(persons.filter(person => person.id !== target.id))
       })
+    }
   }
   
   useEffect(() => {
