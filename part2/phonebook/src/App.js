@@ -83,7 +83,12 @@ const App = () => {
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleFilterChange = (event) => setFilter(event.target.value)
-  const handleDelete = (event) => console.log(event.target)
+  const handleDelete = (event) => {
+    const id = event.target.id
+    personService
+      .remove(id)
+      .then(response => console.log(response))
+  }
   
   useEffect(() => {
     personService
