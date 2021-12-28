@@ -84,10 +84,12 @@ const App = () => {
   const handleNumberChange = (event) => setNewNumber(event.target.value)
   const handleFilterChange = (event) => setFilter(event.target.value)
   const handleDelete = (event) => {
-    const id = event.target.id
+    const id = parseInt(event.target.id)
     personService
       .remove(id)
-      .then(response => console.log(response))
+      .then(response => {
+        setPersons(persons.filter(person => person.id !== id))
+      })
   }
   
   useEffect(() => {
