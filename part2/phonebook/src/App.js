@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const Display = ({ title }) => <h2>{title}</h2>
 
@@ -21,6 +22,12 @@ const Add = (props) => {
         personService
           .update(targetPerson.id, personObject)
           .then(returnedPerson => {
+            props.setMessage(
+              `The contact information for ${props.newName} has been updated.`
+            )
+            setTimeout(() => {
+              props.setMessage(null)
+            }, 5000)
             props.setPersons(props.persons.map(person => person.id !== targetPerson.id ? person : returnedPerson))
           })
       }
@@ -30,6 +37,12 @@ const Add = (props) => {
       personService
         .create(personObject)
         .then(returnedPerson => {
+          props.setMessage(
+            `${props.newName} has been added to your contacts.`
+          )
+          setTimeout(() => {
+            props.setMessage(null)
+          }, 5000)
           props.setPersons(props.persons.concat(returnedPerson))
         })
     }
@@ -88,6 +101,7 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [newMessage, setMessage] = useState(null)
 
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
@@ -97,11 +111,17 @@ const App = () => {
       personService
       .remove(target.id)
       .then(response => {
+        setMessage(
+          `${target.name} has been removed from your contacts.`
+        )
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
         setPersons(persons.filter(person => person.id !== target.id))
       })
     }
   }
-  
+
   useEffect(() => {
     personService
       .getAll()
@@ -113,6 +133,7 @@ const App = () => {
   return (
     <div>
       <Display title='Phonebook' />
+      <Notification message={newMessage} />
       <Filter 
         filter={filter} 
         setFilter={setFilter} 
@@ -125,6 +146,8 @@ const App = () => {
         setNewName={setNewName}
         newNumber={newNumber}
         setNewNumber={setNewNumber}
+        newMessage={newMessage}
+        setMessage={setMessage}
         handleNameChange={handleNameChange}
         handleNumberChange={handleNumberChange}
       />
