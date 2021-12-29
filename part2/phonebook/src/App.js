@@ -9,15 +9,24 @@ const Add = (props) => {
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (props.persons.some(person => person.name === props.newName)){
-      window.alert(`${props.newName} is already added to the phonebook`)
+    const personObject = {
+      name: props.newName,
+      number: props.newNumber
+    }
+
+    if (props.persons.some(person => person.name === props.newName)) {
+      if (window.confirm(`${props.newName} is already added to the phonebook, replace old number with new?`)){
+        const targetPerson = props.persons.find(person => person.name === props.newName)
+
+        personService
+          .update(targetPerson.id, personObject)
+          .then(returnedPerson => {
+            props.setPersons(props.persons.map(person => person.id !== targetPerson.id ? person : returnedPerson))
+          })
+      }
     }
 
     else {
-      const personObject = {
-        name: props.newName,
-        number: props.newNumber
-      }
       personService
         .create(personObject)
         .then(returnedPerson => {
