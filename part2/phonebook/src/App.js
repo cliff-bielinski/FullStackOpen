@@ -22,13 +22,23 @@ const Add = (props) => {
         personService
           .update(targetPerson.id, personObject)
           .then(returnedPerson => {
-            props.setMessage(
-              `The contact information for ${props.newName} has been updated.`
-            )
+            props.setMessage({
+              text: `The contact information for ${props.newName} has been updated.`,
+              color: 'green'
+            })
             setTimeout(() => {
-              props.setMessage(null)
+              props.setMessage({text: null, color:'green'})
             }, 5000)
             props.setPersons(props.persons.map(person => person.id !== targetPerson.id ? person : returnedPerson))
+          })
+          .catch(error => {
+            props.setMessage({
+              text: `${props.newName} has already been removed from the server.`,
+              color: 'red'
+            })
+            setTimeout(() => {
+              props.setMessage({text: null, color:'green'})
+            }, 5000)
           })
       }
     }
@@ -37,11 +47,12 @@ const Add = (props) => {
       personService
         .create(personObject)
         .then(returnedPerson => {
-          props.setMessage(
-            `${props.newName} has been added to your contacts.`
-          )
+          props.setMessage({
+            text: `${props.newName} has been added to your contacts.`,
+            color: 'green'
+          })
           setTimeout(() => {
-            props.setMessage(null)
+            props.setMessage({text:null, color: 'green'})
           }, 5000)
           props.setPersons(props.persons.concat(returnedPerson))
         })
@@ -101,7 +112,7 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [newMessage, setMessage] = useState(null)
+  const [newMessage, setMessage] = useState({text: null, color:'green'})
 
   const handleNameChange = (event) => setNewName(event.target.value)
   const handleNumberChange = (event) => setNewNumber(event.target.value)
@@ -111,11 +122,12 @@ const App = () => {
       personService
       .remove(target.id)
       .then(response => {
-        setMessage(
-          `${target.name} has been removed from your contacts.`
-        )
+        setMessage({
+          text: `${target.name} has been removed from your contacts.`,
+          color: 'green'
+        })
         setTimeout(() => {
-          setMessage(null)
+          setMessage({text: null, color:'green'})
         }, 5000)
         setPersons(persons.filter(person => person.id !== target.id))
       })
@@ -133,7 +145,7 @@ const App = () => {
   return (
     <div>
       <Display title='Phonebook' />
-      <Notification message={newMessage} />
+      <Notification text={newMessage.text} textColor={newMessage.color}/>
       <Filter 
         filter={filter} 
         setFilter={setFilter} 

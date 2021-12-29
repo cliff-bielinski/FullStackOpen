@@ -1,11 +1,15 @@
 import React from 'react'
 
-const Notification = ({ message }) => {
-  if (message === null) return null
+const Notification = ({ text, textColor }) => {
+  if (text === null) return null
+
+  const messageStyle = {
+    color: `${textColor}`
+  }
 
   return (
-    <div className='notification'>
-      {message}
+    <div style={messageStyle} className='notification'>
+      {text}
     </div>      
   )
 }
