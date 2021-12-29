@@ -14,10 +14,10 @@ const Add = (props) => {
       number: props.newNumber
     }
 
-    if (props.persons.some(person => person.name === props.newName)) {
-      if (window.confirm(`${props.newName} is already added to the phonebook, replace old number with new?`)){
-        const targetPerson = props.persons.find(person => person.name === props.newName)
+    const targetPerson = props.persons.find(person => person.name === props.newName)
 
+    if (targetPerson) {
+      if (window.confirm(`${props.newName} is already added to the phonebook, replace old number with new?`)){
         personService
           .update(targetPerson.id, personObject)
           .then(returnedPerson => {
