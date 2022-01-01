@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const config = require('./utils/config')
 const logger = require('./utils/logger')
+const middleware = require('./utils/middleware')
 const cors = require('cors')
 const mongoose = require('mongoose')
 
@@ -21,7 +22,7 @@ app.get('/api/blogs', (request, response) => {
     })
 })
 
-app.post('/api/blogs', (request, response) => {
+app.post('/api/blogs', (request, response, next) => {
   const blog = new Blog(request.body)
 
   blog
@@ -29,8 +30,12 @@ app.post('/api/blogs', (request, response) => {
     .then(result => {
       response.status(201).json(result)
     })
+    .catch(error => next(error))
 })
 
 app.listen(config.PORT, () => {
   logger.info(`Server running on port ${config.PORT}`)
 })
+
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
