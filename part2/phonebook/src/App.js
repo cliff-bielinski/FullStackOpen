@@ -56,6 +56,15 @@ const Add = (props) => {
           }, 5000)
           props.setPersons(props.persons.concat(returnedPerson))
         })
+        .catch(error => {
+          props.setMessage({
+            text: `${error.response.data.error}`,
+            color: 'red'
+          })
+          setTimeout(() => {
+            props.setMessage({text:null, color: 'green'})
+          }, 5000)
+        })
     }
 
     props.setNewName('')
@@ -76,7 +85,7 @@ const Add = (props) => {
   )
 }
 
-const Filter = ({ filter, setFilter, handleFilterChange }) => {
+const Filter = ({ filter, handleFilterChange }) => {
   return(
     <form>
       <div>filter shown with <input value={filter} onChange={handleFilterChange} /></div>
@@ -148,7 +157,6 @@ const App = () => {
       <Notification text={newMessage.text} textColor={newMessage.color}/>
       <Filter 
         filter={filter} 
-        setFilter={setFilter} 
         handleFilterChange={handleFilterChange}
       />
       <Add 
