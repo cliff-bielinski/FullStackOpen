@@ -1,2 +1,2 @@
-### Get all posts from server
+### Get all blog posts from server
 GET http://localhost:3003/api/blogs
