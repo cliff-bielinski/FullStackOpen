@@ -2,6 +2,7 @@ const http = require('http')
 const express = require('express')
 const app = express()
 const config = require('./utils/config')
+const logger = require('./utils/logger')
 const cors = require('cors')
 const mongoose = require('mongoose')
 
@@ -38,5 +39,5 @@ app.post('/api/blogs', (request, response) => {
 })
 
 app.listen(config.PORT, () => {
-  console.log(`Server running on port ${config.PORT}`)
+  logger.info(`Server running on port ${config.PORT}`)
 })
