@@ -8,4 +8,18 @@ const totalLikes = (blogs) => {
   return blogs.reduce(reducer, 0)
 }
 
-module.exports = { dummy, totalLikes }
+const favoriteBlog = (blogs) => {
+  const reducer = (largest, current) => current.likes > largest.likes ? current : largest
+
+  const favorite = blogs.reduce(reducer, { likes: 0 })
+
+  console.log('current favorite:', favorite.title)
+
+  return ({
+    title: favorite.title || '',
+    author: favorite.author || '',
+    likes: favorite.likes
+  })
+}
+
+module.exports = { dummy, totalLikes, favoriteBlog }
