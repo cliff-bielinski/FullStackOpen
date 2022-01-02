@@ -40,4 +40,24 @@ const mostBlogs = (blogs) => {
   return { author: result, blogs: authors[result] }
 }
 
-module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs }
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return { author: '', likes: 0 }
+  }
+
+  const authors = {}
+
+  blogs.forEach(blog => {
+    authors[blog.author] = authors[blog.author] === undefined ? blog.likes : authors[blog.author] += blog.likes
+  })
+
+  console.log(authors)
+
+  const result = Object
+    .keys(authors)
+    .reduce((largest, current) => authors[current] > authors[largest] ? current : largest)
+
+  return { author: result, likes: authors[result] }
+}
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes }
