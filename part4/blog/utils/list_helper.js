@@ -1,3 +1,5 @@
+const blog = require("../models/blog")
+
 const dummy = (blogs) => {
   return 1
 }
@@ -13,8 +15,6 @@ const favoriteBlog = (blogs) => {
 
   const favorite = blogs.reduce(reducer, { likes: 0 })
 
-  console.log('current favorite:', favorite.title)
-
   return ({
     title: favorite.title || '',
     author: favorite.author || '',
@@ -22,4 +22,22 @@ const favoriteBlog = (blogs) => {
   })
 }
 
-module.exports = { dummy, totalLikes, favoriteBlog }
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) {
+    return { author: '', blogs: 0 }
+  }
+
+  const authors = {}
+
+  blogs.forEach(blog => {
+    authors[blog.author] = authors[blog.author] === undefined ? 1 : authors[blog.author] += 1
+  })
+
+  const result = Object
+    .keys(authors)
+    .reduce((largest, current) => authors[current] > authors[largest] ? current : largest)
+
+  return { author: result, blogs: authors[result] }
+}
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs }
